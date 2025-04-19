@@ -17,9 +17,13 @@ subprojects.forEach { subProj ->
         mavenCentral()
     }
 
+    subProj.extensions.configure<JavaPluginExtension>("java") {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
     subProj.tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
-        options.release.set(8)
     }
 
     subProj.spotless {

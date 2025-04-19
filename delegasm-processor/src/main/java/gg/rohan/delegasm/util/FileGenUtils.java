@@ -23,13 +23,12 @@ SOFTWARE.
 */
 package gg.rohan.delegasm.util;
 
-import com.palantir.javapoet.*;
+import com.squareup.javapoet.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import java.io.IOException;
@@ -130,7 +129,7 @@ public class FileGenUtils {
                     .map(TypeVariableName::get)
                     .collect(Collectors.toList());
             classBuilder.addTypeVariables(typeVariables);
-            classBuilder.addSuperinterface(pair.getFirst());
+            classBuilder.addSuperinterface(ParameterizedTypeName.get(pair.getFirst().asElement().asType()));
         });
     }
 

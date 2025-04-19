@@ -1,4 +1,4 @@
 dependencies {
     implementation(project(":delegasm-annotation"))
-    implementation("com.palantir.javapoet:javapoet:0.6.0")
+    implementation("com.squareup:javapoet:1.10.0")
 }
