@@ -1,13 +1,15 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id("com.diffplug.spotless") version "6.25.0"
-    id("maven-publish")
+    id("com.vanniktech.maven.publish") version "0.31.0"
     id("signing")
 }
 
 subprojects.forEach { subProj ->
     subProj.apply(plugin = "java")
     subProj.apply(plugin = "com.diffplug.spotless")
-    subProj.apply(plugin = "maven-publish")
+    subProj.apply(plugin = "com.vanniktech.maven.publish")
     subProj.apply(plugin = "signing")
 
     subProj.group = "gg.rohan.delegasm"
@@ -34,57 +36,42 @@ subprojects.forEach { subProj ->
     }
 
     if (!subProj.hasProperty("shouldPublish") || subProj.findProperty("shouldPublish") == "true") {
-        subProj.publishing {
-            publications {
-                create<MavenPublication>("maven") {
-                    from(subProj.components["java"])
+        subProj.mavenPublishing {
+            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+            signAllPublications()
 
-                    pom {
-                        name.set("Delegasm")
-                        description.set("A library for creating delegate classes at runtime")
-                        url.set("https://github.com/yourusername/delegasm")
+            coordinates(subProj.group as String, subProj.name, subProj.version as String)
 
-                        licenses {
-                            license {
-                                name.set("MIT License")
-                                url.set("https://mit-license.org/")
-                            }
-                        }
+            pom {
+                name.set("Delegasm")
+                description.set("An annotation processor to create classes that are delegated by other classes.")
+                inceptionYear.set("2025")
+                url.set("https://github.com/AV3RG/delegasm")
 
-                        developers {
-                            developer {
-                                id.set("AV3RG")
-                                name.set("Rohan Goyal")
-                                email.set("delegasm@rohan.gg")
-                            }
-                        }
-
-                        scm {
-                            connection.set("scm:git:git://github.com/AV3RG/delegasm.git")
-                            developerConnection.set("scm:git:ssh://github.com/AV3RG/delegasm.git")
-                            url.set("https://github.com/AV3RG/delegasm")
-                        }
+                licenses {
+                    license {
+                        name.set("The MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
+                        distribution.set("https://opensource.org/licenses/MIT")
                     }
                 }
-            }
-
-            repositories {
-                maven {
-                    val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                    val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                    url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-
-                    credentials {
-                        username = project.properties.get("ossrhUsername") as String?
-                        password = project.properties.get("ossrhPassword") as String?
+                developers {
+                    developer {
+                        id.set("AV3RG")
+                        name.set("Rohan")
+                        url.set("https://github.com/AV3RG")
                     }
+                }
+                scm {
+                    url.set("https://github.com/AV3RG/delegasm")
+                    connection.set("scm:git:git://github.com/AV3RG/delegasm.git")
+                    developerConnection.set("scm:git:git://github.com/AV3RG/delegasm.git")
                 }
             }
         }
 
         subProj.signing {
             useGpgCmd()
-            sign(subProj.publishing.publications["maven"])
         }
     }
 }
