@@ -4,9 +4,9 @@
 
 ## ✨ Planned Features
 - [x] Allow delegation of interface methods to an underlying implementation.
-- [ ] Support for multiple interfaces.
-- [ ] Customizable delegation behavior.
-- [ ] Allow delegation of parameterized types.
+- [x] Support for multiple interfaces.
+- [x] Customizable delegation behavior.
+- [x] Allow delegation of parameterized types.
 
 ## 🤝 Contributing
 Contributions are welcome! Feel free to submit a pull request or open an issue.
